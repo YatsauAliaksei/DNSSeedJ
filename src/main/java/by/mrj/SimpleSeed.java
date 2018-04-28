@@ -24,12 +24,17 @@ import java.util.stream.Collectors;
 public class SimpleSeed {
 
     static {
-        System.setProperty("socksProxyHost", "127.0.0.1");
-        System.setProperty("socksProxyPort", "9050");
-        System.setProperty("http.proxyHost", "127.0.0.1");
-        System.setProperty("http.proxyPort", "9050");
-        System.setProperty("https.proxyHost", "127.0.0.1");
-        System.setProperty("https.proxyPort", "9050");
+        if (Boolean.valueOf(System.getProperty("tor.enabled"))) {
+            String torHost = System.getProperty("tor.host");
+            String torPort = System.getProperty("tor.port");
+            if (torHost == null || torPort == null) {
+                throw new RuntimeException(
+                        String.format("Wrong setup. Tor Host: [%s], Tor Port: [%s]", torHost, torPort));
+            }
+
+            System.setProperty("socksProxyHost", torHost);
+            System.setProperty("socksProxyPort", torPort);
+        }
     }
 
     public static void main(String[] args) {
@@ -66,7 +71,6 @@ public class SimpleSeed {
                         OutputStream os = sockX.getOutputStream();
                         os.write(bytes);
                         os.flush();
-//                        sockX.shutdownOutput();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
