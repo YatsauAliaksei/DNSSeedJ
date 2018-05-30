@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Simplest possible implementation of "DNS seed".
  * NOTE: actually not a DNS seed :)
+ * Returns peers addresses including requester address.
  */
 @Log4j2
 public class SimpleSeed {
